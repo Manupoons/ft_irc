@@ -6,38 +6,14 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/05/29 11:35:32 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/05/29 11:38:21 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #ifndef SERVER_HPP
 # define SERVER_HPP
 
-#include <iostream>
-#include <sstream>
-
-#include <arpa/inet.h>
-#include <netinet/in.h>
-#include <sys/socket.h>
-#include <sys/types.h>
-#include <unistd.h>
-
-#include <fcntl.h>
-
-#include <poll.h>
-
-#include <csignal>
-
-#include <cstdlib>
-
-#include <cstring>
-#include <string>
-
-#include <iomanip>
-#include <map>
-#include <utility>
-#include <vector>
-
+#include "utils.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
 
