@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/05/27 11:29:16 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/05/29 09:29:46 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,8 +30,8 @@ class Channel
 
 	public:
 		Channel();
-		Channel(const Channel &copy);
-		Channel &operator=(const Channel &assign);
+		//Channel(const Channel &copy);
+		//Channel &operator=(const Channel &assign);
 		~Channel();
 };
 

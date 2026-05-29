@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:20:40 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/05/27 11:24:11 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/05/29 09:29:41 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,8 @@ class Client
 
 	public:
 		Client();
-		Client(const Client &copy);
-		Client &operator=(const Client &assign);
+		//Client(const Client &copy);
+		//Client &operator=(const Client &assign);
 		~Client();
 };
 
