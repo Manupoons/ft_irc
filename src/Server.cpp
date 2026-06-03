@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/03 15:16:33 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/03 18:32:20 by rcarpio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -34,7 +34,15 @@ void Server::init(const std::string &port, const std::string &password)
 	{
 		std::cerr << "Error creating socket" << std::endl;
 		exit(EXIT_FAILURE);
-	}	
+	}
+
+	int opt = 1;
+	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+        throw std::runtime_error("Error setting socket options");
+	
+	if (fcntl(_serverSocket, F_SETFL, O_NONBLOCK) == -1)
+		throw std::runtime_error("Error setting non-blocking mode");
+	
+
+	
 }
-
-
