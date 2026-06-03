@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:20:40 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/05/29 11:37:26 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/03 12:06:15 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,8 +26,6 @@ class Client
 
 	public:
 		Client();
-		//Client(const Client &copy);
-		//Client &operator=(const Client &assign);
 		~Client();
 };
 
