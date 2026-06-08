@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 09:23:40 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/05 10:02:30 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/08 10:24:55 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -74,19 +74,80 @@ inline std::string _itos(int n)
 
 //── CHANNEL ──
 
+#define RPL_TOPIC(srv, nick, ch, topic) \
+	":" + srv + " 332 " + nick + " " + ch + " :" + topic + "\r\n"
+
+#define RPL_NOTOPIC(srv, nick, ch) \
+	":" + srv + " 331 " + nick + " " + ch + " :No topic is set\r\n"
+
+#define RPL_NAMREPLY(srv, nick, ch, nicks) \
+	":" + srv + " 353 " + nick + " = " + ch + " :" + nicks + "\r\n"
+
+#define RPL_ENDOFNAMES(srv, nick, ch) \
+	":" + srv + " 366 " + nick + " " + ch + " :End of /NAMES list\r\n"
+
+#define RPL_CHANNELMODEIS(srv, nick, ch, modes) \
+	":" + srv + " 324 " + nick + " " + ch + " " + modes + "\r\n"
+
+#define ERR_NOSUCHCHANNEL(srv, nick, ch) \
+	":" + srv + " 403 " + nick + " " + ch + " :No such channel\r\n"
+
+#define ERR_NOTONCHANNEL(srv, nick, ch) \
+	":" + srv + " 442 " + nick + " " + ch + " :You're not on that channel\r\n"
+
+#define ERR_USERONCHANNEL(srv, nick, target, ch) \
+	":" + srv + " 443 " + nick + " " + target + " " + ch + " :is already on channel\r\n"
+
+#define ERR_BADCHANNELKEY(srv, nick, ch) \
+	":" + srv + " 475 " + nick + " " + ch + " :Cannot join channel (+k)\r\n"
+
+#define ERR_CHANNELISFULL(srv, nick, ch) \
+	":" + srv + " 471 " + nick + " " + ch + " :Cannot join channel (+l)\r\n"
+
+#define ERR_INVITEONLYCHAN(srv, nick, ch) \
+	":" + srv + " 473 " + nick + " " + ch + " :Cannot join channel (+i)\r\n"
+
+#define ERR_CHANOPRIVSNEEDED(srv, nick, ch) \
+	":" + srv + " 482 " + nick + " " + ch + " :You're not channel operator\r\n"
+
+#define ERR_USERNOTINCHANNEL(srv, nick, target, ch) \
+	":" + srv + " 441 " + nick + " " + target + " " + ch + " :They aren't on that channel\r\n"
 
 //── PRIVMSG ──
 
+#define ERR_NOSUCHNICK(srv, nick, target) \
+	":" + srv + " 401 " + nick + " " + target + " :No such nick/channel\r\n"
+
+#define ERR_NORECIPIENT(srv, nick) \
+	":" + srv + " 411 " + nick + " :No recipient given\r\n"
+
+#define ERR_NOTEXTTOSEND(srv, nick) \
+	":" + srv + " 412 " + nick + " :No text to send\r\n"
 
 //── MODE ──
 
+#define ERR_UNKNOWNMODE(srv, nick, c, ch) \
+	":" + srv + " 472 " + nick + " " + std::string(1, c) + " :is unknown mode char to me for " + ch + "\r\n"
+
+#define ERR_UMODEUNKNOWNFLAG(srv, nick) \
+	":" + srv + " 501 " + nick + " :Unknown MODE flag\r\n"
 
 //── KICK / INVITE / TOPIC ──
 
+#define RPL_INVITIN(srv, nick, target, ch) \
+	":" + srv + " 341 " + nick + " " + target + " " + ch + "\r\n"
 
 //── WHO ──
 
+#define RPL_WHOREPLY(srv, req, ch, user, host, s, nick, flags, real) \
+	":" + srv + " 352 " + req + " " + ch + " " + user + " " + host + " " + s + " " + nick + " " + flags + " :0 " + real + "\r\n"
+
+#define RPL_ENDOFWHO(srv, nick, mask) \
+	":" + srv + " 315 " + nick + " " + mask + " :End of /WHO list\r\n"
 
 //── GENERIC ──
+
+#define ERR_CMDNOTFOUND(srv, cmd) \
+	":" + srv + " 421 * " + cmd + " :Unknown command\r\n"
 
 #endif
