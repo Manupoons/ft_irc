@@ -1,11 +1,11 @@
 NAME = ircserv
 
 SRC = src/Channel.cpp src/Client.cpp src/main.cpp src/Server.cpp
-		
+
 OBJ_DIR = obj
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 CC = c++
-CFLAGS = -Wall -Wextra -Werror -Wunused-function -std=c++98
+CFLAGS = -std=c++98
 
 COLOR_COMPILATION = \033[38;2;0;200;100m
 COLOR_CLEAN = \033[38;2;200;100;100m

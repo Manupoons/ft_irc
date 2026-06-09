@@ -6,7 +6,7 @@
 /*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/03 13:27:49 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/08 16:03:04 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,6 +37,7 @@ class Server
 		std::vector<Channel *>	_channels;
 		struct sockaddr_in		_confSocket;
 		int						_replyCode;
+		std::vector<struct pollfd>	_fds;
 		static bool 			_signal;
 
 		//¬¬¬¬ Validation ¬¬¬¬
