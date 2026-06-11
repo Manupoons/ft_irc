@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/05/29 11:37:24 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/10 17:05:35 by rcarpio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -22,17 +22,29 @@ class Channel
 		std::string _name;
 		std::string _topic;
 		std::string _password;
+		int 		_numberUsers;
 		std::vector<Client*> _members;
 		std::vector<Client*> _operators;
+		std::vector<Client*> _invitedUsers;
 		bool _inviteOnly;
 		bool _topicRestricted;
-		int _maxMembers;
+		bool _passwordRequired;
+		int _maxUsers;
 
 	public:
 		Channel();
-		//Channel(const Channel &copy);
-		//Channel &operator=(const Channel &assign);
 		~Channel();
+
+		void addClient(Client* client);
+		void removeClient(Client* client);
+		bool isMember(Client* client) const;
+		void broadcast(const std::string& message, Client* sender=nullptr) const;
+		bool isOperator(Client* client) const;
+		void addOperator(Client* client);
+		void removeOperator(Client* client);
+		bool checkJoinRules(const std::string& password) const;
+		void setMode(char mode, bool add, const std::string& arg);
+		void addInvitedUser(Client* client);
 };
 
 #endif
