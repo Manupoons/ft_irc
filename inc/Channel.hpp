@@ -6,7 +6,7 @@
 /*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 11:09:09 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/11 14:12:10 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -45,6 +45,28 @@ class Channel
 		bool checkJoinRules(const std::string& password) const;
 		void setMode(char mode, bool add, const std::string& arg);
 		void addInvitedUser(Client* client);
+
+		// Getters
+		std::string getName() const { return _name; }
+		std::string getTopic() const { return _topic; }
+		std::string getPassword() const { return _password; }
+		int getNumberUsers() const { return _numberUsers; }
+		int getMaxUsers() const { return _maxUsers; }
+		bool isInviteOnly() const { return _inviteOnly; }
+		bool isTopicRestricted() const { return _topicRestricted; }
+		bool isPasswordRequired() const { return _passwordRequired; }
+		const std::vector<Client*>& getMembers() const { return _members; }
+		const std::vector<Client*>& getOperators() const { return _operators; }
+		const std::vector<Client*>& getInvitedUsers() const { return _invitedUsers; }
+		
+		// Setters
+		void setName(const std::string& name) { _name = name; }
+		void setTopic(const std::string& topic) { _topic = topic; }
+		void setPassword(const std::string& password) { _password = password; }
+		void setMaxUsers(int maxUsers) { _maxUsers = maxUsers; }
+		void setInviteOnly(bool inviteOnly) { _inviteOnly = inviteOnly; }
+		void setTopicRestricted(bool topicRestricted) { _topicRestricted = topicRestricted; }
+		void setPasswordRequired(bool passwordRequired) { _passwordRequired = passwordRequired; }
 };
 
 #endif

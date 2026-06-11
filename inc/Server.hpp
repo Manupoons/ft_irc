@@ -6,7 +6,7 @@
 /*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 12:32:22 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/11 13:19:57 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,7 +28,7 @@ class Server
 
 		static const int _commandListSize = 13;
 		static const commandHandler _commandList[_commandListSize];
-	
+
 		int						_port;
 		std::string				_password;
 		int 					_serverSocket; 
@@ -40,7 +40,6 @@ class Server
 		std::vector<struct pollfd>	_fds;
 		static bool 			_signal;
 
-		//¬¬¬¬ Validation ¬¬¬¬
 		void _isValidPort(const std::string &port);
 		bool _isClientInAnyChannel(const int fd);
 		bool _clientIsReadyToLogin(const int fd);
@@ -97,7 +96,7 @@ class Server
 
 		//¬¬¬¬ Hostname ¬¬¬¬
 		std::string _getHostname();
-		
+	
 	public:
 		Server();
 		~Server();
