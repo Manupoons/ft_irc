@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:44 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 10:49:08 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/11 11:20:11 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -68,4 +68,10 @@ std::string Client::getPrefix() const
 	std::string user = _username.empty() ? "*" : _username;
 	std::string host = _ipAddr.empty() ? "localhost" : _ipAddr;
 	return ":" + nick + "!" + user + "@" + host;
+}
+
+void Client::sendMessage(const std::string &message)
+{
+	if (send(_fd, message.c_str(), message.size(), 0) == -1)
+    	std::cerr << "Error sending message to " << _nickname << std::endl;
 }
