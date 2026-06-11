@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 10:49:23 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/11 10:53:47 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -280,90 +280,6 @@ bool Server::_isNicknameInUse(const int fd, const std::string &nickname)
 			return true;
 	}
 	return false;
-}
-
-//? COMMAND HANDLERS
-
-void Server::_handlerClientCap(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling CAP command from fd " << fd << ": " << buffer << std::endl;
-	// Implement CAP command handling logic here
-}
-void Server::_handlerClientJoin(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling JOIN command from fd " << fd << ": " << buffer << std::endl;
-	// Implement JOIN command handling logic here
-}
-
-void Server::_handlerClientQuit(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling QUIT command from fd " << fd << ": " << buffer << std::endl;
-}
-
-void Server::_handlerClientPart(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling PART command from fd " << fd << ": " << buffer << std::endl;
-	// Implement PART command handling logic here
-}
-
-void Server::_handlerClientMode(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling MODE command from fd " << fd << ": " << buffer << std::endl;
-	// Implement MODE command handling logic here
-}
-
-void Server::_handlerClientKick(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling KICK command from fd " << fd << ": " << buffer << std::endl;
-	// Implement KICK command handling logic here
-}
-
-void Server::_handlerClientTopic(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling TOPIC command from fd " << fd << ": " << buffer << std::endl;
-	// Implement TOPIC command handling logic here
-}
-
-void Server::_handlerClientInvite(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling INVITE command from fd " << fd << ": " << buffer << std::endl;
-	// Implement INVITE command handling logic here
-}
-
-void Server::_handlerClientPrivmsg(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling PRIVMSG command from fd " << fd << ": " << buffer << std::endl;
-	// Implement PRIVMSG command handling logic here
-}
-
-void Server::_handlerClientNickname(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling NICK command from fd " << fd << ": " << buffer << std::endl;
-	// Implement NICK command handling logic here
-}
-
-void Server::_handlerClientUsername(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling USER command from fd " << fd << ": " << buffer << std::endl;
-	// Implement USER command handling logic here
-}
-
-void Server::_handlerClientPassword(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling PASS command from fd " << fd << ": " << buffer << std::endl;
-
-	std::string passwd = buffer.substr(buffer.find(' ') + 1);
-	std::cout << "Extracted password: " << passwd << std::endl;
-
-	
-	// Implement PASS command handling logic here
-}
-
-void Server::_handlerClientWho(const std::string &buffer, const int fd)
-{
-	std::cout << "Handling WHO command from fd " << fd << ": " << buffer << std::endl;
-	
-	// Implement WHO command handling logic here
 }
 
 //? PARSING

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/08 16:03:04 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/11 11:13:53 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "utils.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "Replies.hpp"
 
 class Server
 {
