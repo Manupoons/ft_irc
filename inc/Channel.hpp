@@ -6,7 +6,7 @@
 /*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 14:16:41 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/11 14:24:25 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -46,6 +46,7 @@ class Channel
 		bool checkJoinRules(const std::string& password) const;
 		void setMode(char mode, bool add, const std::string& arg);
 		void addInvitedUser(Client* client);
+		bool isInvited(Client* client) const;
 
 		// Getters
 		std::string getName() const { return _name; }

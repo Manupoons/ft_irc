@@ -6,7 +6,7 @@
 /*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:42 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 11:55:43 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/11 14:24:58 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -142,10 +142,16 @@ void Channel::setMode(char mode, bool add, const std::string& arg)
 	}
 }
 
+bool Channel::isInvited(Client* client) const
+{
+	return std::find(_invitedUsers.begin(), _invitedUsers.end(), client) != _invitedUsers.end();
+}
+
 void Channel::addInvitedUser(Client* client)
 {
-	if (client && std::find(_invitedUsers.begin(), _invitedUsers.end(), client) == _invitedUsers.end())
+	if (client && !isInvited(client))
 	{
 		_invitedUsers.push_back(client);
 	}
 }
+
