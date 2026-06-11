@@ -6,9 +6,10 @@
 /*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 14:12:10 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/11 14:16:41 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
+
 
 #ifndef CHANNEL_HPP
 # define CHANNEL_HPP

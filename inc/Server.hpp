@@ -6,7 +6,7 @@
 /*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 13:19:57 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/11 14:17:02 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -16,6 +16,7 @@
 #include "utils.hpp"
 #include "Client.hpp"
 #include "Channel.hpp"
+#include "Replies.hpp"
 
 class Server
 {
