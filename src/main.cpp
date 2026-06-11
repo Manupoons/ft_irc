@@ -3,20 +3,27 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:55:38 by rcarpio-          #+#    #+#             */
-/*   Updated: 2026/05/27 10:42:07 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/08 16:04:58 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "utils.hpp"
+#include "../inc/Server.hpp"
+#include <iostream>
 
 int main(int argc, char **argv)
-{
-	if (argc != 3)
-		return (std::cout << "Usage: ./ircserv <port> <password>" << std::endl, 1);
-	if (std::atoi(argv[1]) < 1024 || std::atoi(argv[1]) > 65535)
-		return (std::cout << "Error: Port number must be between 1024 and 65535" << std::endl, 1);
-	// Else initialize server
+{	// Else initialize server
+	(void) argc;
+	try
+	{
+		Server server;
+		server.init(argv[1], argv[2]);
+	}
+	catch (const std::exception &e)
+	{
+		std::cerr << "Error initializing server: " << e.what() << std::endl;
+		return 1;
+	}	
 }

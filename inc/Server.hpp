@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/05/29 11:38:21 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/08 16:03:04 by rcarpio-mam      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,12 +31,13 @@ class Server
 	
 		int						_port;
 		std::string				_password;
-		int 					_serverSocket;
+		int 					_serverSocket; 
 		std::string				_hostname;
 		std::vector<Client *>	_clients;
 		std::vector<Channel *>	_channels;
 		struct sockaddr_in		_confSocket;
 		int						_replyCode;
+		std::vector<struct pollfd>	_fds;
 		static bool 			_signal;
 
 		//¬¬¬¬ Validation ¬¬¬¬
