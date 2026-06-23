@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 09:23:40 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 10:58:14 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/22 11:34:39 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -134,14 +134,14 @@ inline std::string _itos(int n)
 
 //── KICK / INVITE / TOPIC ──
 
-#define RPL_INVITIN(srv, nick, target, ch) \
+#define RPL_INVITING(srv, nick, target, ch) \
 	":" + srv + " 341 " + nick + " " + target + " " + ch + "\r\n"
 
 //── WHO ──
 
 #define RPL_WHOREPLY(srv, req, ch, user, host, s, nick, flags, real) \
 	":" + srv + " 352 " + req + " " + ch + " " + user + " " + host + " " + s + " " + nick + " " + flags + " :0 " + real + "\r\n"
-
+	
 #define RPL_ENDOFWHO(srv, nick, mask) \
 	":" + srv + " 315 " + nick + " " + mask + " :End of /WHO list\r\n"
 

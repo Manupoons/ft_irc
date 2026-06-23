@@ -3,18 +3,18 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:42 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 14:24:58 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/23 14:47:54 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Channel.hpp"
 #include <algorithm>
 
-Channel::Channel() :
-	_name(""),
+Channel::Channel(const std::string &name) :
+	_name(name),
 	_topic(""),
 	_password(""),
 	_numberUsers(0),
@@ -33,7 +33,7 @@ Channel::~Channel()
 
 void Channel::addClient(Client* client)
 {
-	if (client && !isMember(client))
+	if (client && !hasClient(client))
 	{
 		_members.push_back(client);
 		_numberUsers++;
@@ -53,7 +53,7 @@ void Channel::removeClient(Client* client)
 	}
 }
 
-bool Channel::isMember(Client* client) const
+bool Channel::hasClient(Client* client) const
 {
 	return std::find(_members.begin(), _members.end(), client) != _members.end();
 }
@@ -142,6 +142,45 @@ void Channel::setMode(char mode, bool add, const std::string& arg)
 	}
 }
 
+std::string Channel::getModeString() const
+{
+	std::string modes = "+";
+	if (_inviteOnly)
+		modes += "i";
+	if (_topicRestricted)
+		modes += "t";
+	if (!_password.empty())
+		modes += "k";
+	if (_numberUsers > 0)
+		modes += "l";
+	if (modes == "+")
+		return "";
+	return modes;
+}
+
+std::string Channel::getNickList() const
+{
+	std::string list;
+	for (size_t i = 0; i < _members.size(); i++)
+	{
+		if (i > 0)
+			list += " ";
+		if (isOperator(_members[i]))
+			list += "@";
+		list += _members[i]->getNickname();
+	}
+	return list;
+}
+
+void Channel::removeInvited(Client *client)
+{
+	if (!client)
+		return;
+	std::vector<Client *>::iterator it = std::find(_invitedUsers.begin(), _invitedUsers.end(), client);
+	if (it != _invitedUsers.end())
+		_invitedUsers.erase(it);
+}
+
 bool Channel::isInvited(Client* client) const
 {
 	return std::find(_invitedUsers.begin(), _invitedUsers.end(), client) != _invitedUsers.end();
@@ -155,3 +194,7 @@ void Channel::addInvitedUser(Client* client)
 	}
 }
 
+int Channel::clientCount() const
+{
+	return static_cast<int>(_members.size());
+}

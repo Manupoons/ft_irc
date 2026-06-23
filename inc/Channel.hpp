@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 14:24:25 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/23 14:46:30 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,20 +33,23 @@ class Channel
 		int _maxUsers;
 
 	public:
-		Channel();
+		Channel(const std::string &name);
 		~Channel();
 
 		void addClient(Client* client);
 		void removeClient(Client* client);
-		bool isMember(Client* client) const;
+		bool hasClient(Client* client) const;
 		void broadcast(const std::string& message, Client* sender=nullptr) const;
 		bool isOperator(Client* client) const;
 		void addOperator(Client* client);
 		void removeOperator(Client* client);
 		bool checkJoinRules(const std::string& password) const;
 		void setMode(char mode, bool add, const std::string& arg);
+		std::string getModeString() const;
 		void addInvitedUser(Client* client);
 		bool isInvited(Client* client) const;
+		int  clientCount() const;
+		void removeInvited(Client *client);
 
 		// Getters
 		std::string getName() const { return _name; }
@@ -54,12 +57,13 @@ class Channel
 		std::string getPassword() const { return _password; }
 		int getNumberUsers() const { return _numberUsers; }
 		int getMaxUsers() const { return _maxUsers; }
-		bool isInviteOnly() const { return _inviteOnly; }
-		bool isTopicRestricted() const { return _topicRestricted; }
-		bool isPasswordRequired() const { return _passwordRequired; }
+		bool getInviteOnly() const { return _inviteOnly; }
+		bool getTopicRestricted() const { return _topicRestricted; }
+		bool getPasswordRequired() const { return _passwordRequired; }
 		const std::vector<Client*>& getMembers() const { return _members; }
 		const std::vector<Client*>& getOperators() const { return _operators; }
 		const std::vector<Client*>& getInvitedUsers() const { return _invitedUsers; }
+		std::string getNickList() const;
 		
 		// Setters
 		void setName(const std::string& name) { _name = name; }
