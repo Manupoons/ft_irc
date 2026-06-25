@@ -1,6 +1,10 @@
 NAME = ircserv
 
-SRC = src/Channel.cpp src/Client.cpp src/main.cpp src/Server.cpp
+SRC =	src/Channel.cpp \
+		src/Client.cpp \
+		src/main.cpp \
+		src/Server.cpp \
+		src/commands.cpp \
 
 OBJ_DIR = obj
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)

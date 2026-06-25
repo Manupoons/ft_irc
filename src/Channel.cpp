@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:42 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/23 14:47:54 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/25 16:58:25 by rcarpio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -100,7 +100,7 @@ bool Channel::checkJoinRules(const std::string& password) const
 	if (_inviteOnly)
 	{
 		// Check if the client is invited
-		if (std::find(_invitedUsers.begin(), _invitedUsers.end(), nullptr) == _invitedUsers.end())
+		if (std::find(_invitedUsers.begin(), _invitedUsers.end(), (Client*)NULL) == _invitedUsers.end())
 		{
 			return false;
 		}
@@ -135,7 +135,7 @@ void Channel::setMode(char mode, bool add, const std::string& arg)
 		_passwordRequired = !arg.empty();
 		break;
 	case 'l':
-		_maxUsers = add ? std::stoi(arg) : 0;
+		_maxUsers = add ? std::atoi(arg.c_str()) : 0;
 		break;
 	default:
 		break;

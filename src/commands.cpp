@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   commands.cpp                                       :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:50:29 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/23 15:08:10 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/25 17:02:33 by rcarpio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Server.hpp"
+#include "../inc/Server.hpp"
 
 void Server::_handlerClientCap(const std::string &buffer, const int fd)
 {

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/23 14:46:30 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/25 16:53:37 by rcarpio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,7 +39,7 @@ class Channel
 		void addClient(Client* client);
 		void removeClient(Client* client);
 		bool hasClient(Client* client) const;
-		void broadcast(const std::string& message, Client* sender=nullptr) const;
+		void broadcast(const std::string& message, Client* sender) const;
 		bool isOperator(Client* client) const;
 		void addOperator(Client* client);
 		void removeOperator(Client* client);

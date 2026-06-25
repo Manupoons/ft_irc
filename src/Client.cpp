@@ -3,14 +3,14 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:44 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 11:20:11 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/25 17:08:59 by rcarpio-         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
-#include "Client.hpp"
+#include "../inc/Client.hpp"
 
 Client::Client(int fd) : 
 	_fd(fd),
@@ -73,5 +73,10 @@ std::string Client::getPrefix() const
 void Client::sendMessage(const std::string &message)
 {
 	if (send(_fd, message.c_str(), message.size(), 0) == -1)
-    	std::cerr << "Error sending message to " << _nickname << std::endl;
+		std::cerr << "Error sending message to " << _nickname << std::endl;
+}
+
+bool Client::getIsLogged() const
+{
+    return _isLogged; 
 }
