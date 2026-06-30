@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 09:23:40 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 11:03:16 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/30 15:09:06 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -149,5 +149,22 @@ inline std::string _itos(int n)
 
 #define ERR_CMDNOTFOUND(srv, cmd) \
 	":" + srv + " 421 * " + cmd + " :Unknown command\r\n"
+
+#define RPL_PARROT(srv, nick) \
+	":" + srv + " NOTICE " + nick + " :                    .cccccccc.                \r\n" + \
+	":" + srv + " NOTICE " + nick + " :              .,,,;;cc:cccccc:;;,.            \r\n" + \
+	":" + srv + " NOTICE " + nick + " :            .cdxo;..,::cccc::,..;l.           \r\n" + \
+	":" + srv + " NOTICE " + nick + " :           ,do:,,:c:coxxdllll:;,';:,.         \r\n" + \
+	":" + srv + " NOTICE " + nick + " :         .cl;.,oxxc'.,cc,.';;;'...oNc         \r\n" + \
+	":" + srv + " NOTICE " + nick + " :         ;Oc..cxxxc'.,c;..;lll;...cO;         \r\n" + \
+	":" + srv + " NOTICE " + nick + " :       .;;',:ldxxxdoldxc..;lll:'...'c,        \r\n" + \
+	":" + srv + " NOTICE " + nick + " :       ;c..cxxxxkxxkxxxc'.;lll:'','.cdc.      \r\n" + \
+	":" + srv + " NOTICE " + nick + " :     .c;.;odxxxxxxxxxxxd;.,cll;.,l:.'dNc      \r\n" + \
+	":" + srv + " NOTICE " + nick + " :    .:,''ccoxkxxkxxxxxxx:..,:;'.:xc..oNc      \r\n" + \
+	":" + srv + " NOTICE " + nick + " :  .lc,.'lc':dxxxkxxxxxxxol,...',lx:..dNc      \r\n" + \
+	":" + srv + " NOTICE " + nick + " : .:,',coxoc;;ccccoxxxxxxxxo:::oxxo,.cdc.      \r\n" + \
+	":" + srv + " NOTICE " + nick + " :.;':;.'oxxxxxc''''';cccoxxxxxxxxxxxc..oc        \r\n" + \
+	":" + srv + " NOTICE " + nick + " :,do:'..,:llllll:;;;;;;,..,;:lllllllll;..oc        \r\n" + \
+	":" + srv + " NOTICE " + nick + " :cNo.....................................oc\r\n"
 
 #endif

@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:50:29 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 11:11:12 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/30 15:05:34 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -731,4 +731,10 @@ void Server::_handlerClientWho(const std::string &buffer, const int fd)
 		}
 	}
 	_sendResponse(fd, RPL_ENDOFWHO(_getHostname(), client->getNickname(), mask));
+}
+
+void Server::_handlerClientParrot(const std::string &buffer, const int fd)
+{
+	Client *client = _getClient(fd);
+	_sendResponse(fd, RPL_PARROT(_getHostname(), client->getNickname()));
 }

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.hpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 14:17:02 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/30 15:02:35 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,7 +27,7 @@ class Server
 			void (Server::*handler)(const std::string &, const int);
 		};
 
-		static const int _commandListSize = 13;
+		static const int _commandListSize = 14;
 		static const commandHandler _commandList[_commandListSize];
 
 		int						_port;
@@ -61,6 +61,8 @@ class Server
 		void _handlerClientUsername(const std::string &buffer, const int fd);
 		void _handlerClientPassword(const std::string &buffer, const int fd);
 		void _handlerClientWho(const std::string &buffer, const int fd);
+		void _handlerClientParrot(const std::string &buffer, const int fd);
+
 
 		//¬¬¬¬ Socket / Loop ¬¬¬¬
 		static void _signalHandler(const int signum);

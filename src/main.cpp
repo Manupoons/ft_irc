@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   main.cpp                                           :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:55:38 by rcarpio-          #+#    #+#             */
-/*   Updated: 2026/06/11 14:09:01 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/30 15:03:45 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,7 +14,7 @@
 #include <iostream>
 
 int main(int argc, char **argv)
-{	// Else initialize server
+{
 	(void) argc;
 	try
 	{

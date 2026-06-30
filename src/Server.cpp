@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 11:26:21 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/30 15:01:45 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -30,7 +30,8 @@ const Server::commandHandler Server::_commandList[Server::_commandListSize] = {
     {"NICK",    &Server::_handlerClientNickname},
     {"USER",    &Server::_handlerClientUsername},
     {"PASS",    &Server::_handlerClientPassword},
-    {"WHO",     &Server::_handlerClientWho}
+    {"WHO",     &Server::_handlerClientWho},
+    {"PARROT",  &Server::_handlerClientParrot}
 };
 
 
