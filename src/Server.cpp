@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
+/*   By: rcarpio-cyepes <rcarpio-cyepes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/11 13:18:42 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/06/30 08:29:33 by rcarpio-cye      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -174,6 +174,9 @@ void Server::_acceptNewClient()
 	clientPollFd.revents = 0;
 
 	_fds.push_back(clientPollFd);
+	Client *newClient = new Client(clientSocket);
+	newClient->setIpAddr(inet_ntoa(clientAddr.sin_addr));
+	_clients.push_back(newClient);
 	std::cout << "New client connected: " << inet_ntoa(clientAddr.sin_addr) << ":" << ntohs(clientAddr.sin_port) << std::endl;
 }
 
@@ -196,14 +199,32 @@ void Server:: _clearClient(const int fd)
 
 void Server::_receiveNewData(const int fd)
 {
+	Client *client = _getClient(fd);
+	if (!client)
+		return;
+
 	char buffer[512];
 	ssize_t bytesRead = recv(fd, buffer, sizeof(buffer) - 1, 0);
 	if (bytesRead > 0)
 	{
 		buffer[bytesRead] = '\0';
-		std::string data(buffer);
-		std::cout << "Received data from fd " << fd << ": " << data << std::endl;
-		_executeCommand(data, fd);
+		client->appendToBuffer(std::string(buffer));
+		
+		std::string clientBuffer = client->getBuffer();
+		size_t pos;
+		while ((pos = clientBuffer.find('\n')) != std::string::npos)
+		{
+			std::string cmdLine = clientBuffer.substr(0, pos);
+			if (!cmdLine.empty() && cmdLine[cmdLine.length() - 1] == '\r')
+				cmdLine.erase(cmdLine.length() - 1);
+				
+			clientBuffer.erase(0, pos + 1);
+			client->clearBuffer();
+			client->appendToBuffer(clientBuffer);
+			
+			if (!cmdLine.empty())
+				_executeCommand(cmdLine, fd);
+		}
 	}
 	else if (bytesRead == 0)
 	{
@@ -244,11 +265,14 @@ void Server::_isValidPort(const std::string &port)
 
 bool Server::_isClientInAnyChannel(const int fd)
 {
-	// for (size_t i = 0; i < _channels.size(); ++i)
-	// {
-	// 	if (_channels[i]->hasClient(fd))						//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
-	// 		return true;
-	// }
+	Client *client = _getClient(fd);
+	if (!client)
+		return false;
+	for (size_t i = 0; i < _channels.size(); ++i)
+	{
+		if (_channels[i]->hasClient(client))
+			return true;
+	}
 	return false;
 }
 
@@ -287,19 +311,37 @@ bool Server::_isNicknameInUse(const int fd, const std::string &nickname)
 void Server::_executeCommand(const std::string buffer, const int fd)
 {
 	std::cout << "Executing command from fd " << fd << ": " << buffer << std::endl;
-	std::string command  = buffer.substr(0, buffer.find(' '));
+	
+	size_t firstSpace = buffer.find(' ');
+	std::string command;
+	std::string arguments;
+	if (firstSpace == std::string::npos)
+	{
+		command = buffer;
+		arguments = "";
+	}
+	else
+	{
+		command = buffer.substr(0, firstSpace);
+		size_t firstArgChar = buffer.find_first_not_of(" ", firstSpace);
+		if (firstArgChar != std::string::npos)
+			arguments = buffer.substr(firstArgChar);
+		else
+			arguments = "";
+	}
+
+	command = toupper(command);
 	command = _cleanseBuffer(command, "\r\n");
 
 	for (int i = 0; i < _commandListSize; ++i)
 	{
 		if (command == _commandList[i].cmd)
 		{
-			(this->*(_commandList[i].handler))(buffer, fd);
+			(this->*(_commandList[i].handler))(arguments, fd);
 			return;
 		}
 	}
 	std::cout << "Unknown command " << fd << ": " << command << std::endl;
-	// Implement command parsing and execution logic here
 }
 
 std::string Server::_cleanseBuffer(const std::string &buffer, const std::string &chars_to_remove)
@@ -348,11 +390,11 @@ Client* Server::_getClient(const std::string nickname)
 
 Channel* Server::_getChannel(const std::string &channel_name)
 {
-	// for (size_t i = 0; i < _channels.size(); ++i)
-	// {
-		// if (_channels[i]->getName() == channel_name)			//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
-			// return _channels[i];
-	// }
+	for (size_t i = 0; i < _channels.size(); ++i)
+	{
+		if (_channels[i]->getName() == channel_name)
+			return _channels[i];
+	}
 	return NULL;
 }
 
@@ -363,8 +405,17 @@ void Server::_addChannel(Channel *channel)
 
 void Server::_removeEmptyChannels()
 {
-	// _channels.erase(std::remove_if(_channels.begin(), _channels.end(),
-		// [](Channel *channel) { return channel->isEmpty(); }), _channels.end()); //! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
+	std::vector<Channel*>::iterator it = _channels.begin();
+	while (it != _channels.end())
+	{
+		if ((*it)->clientCount() == 0)
+		{
+			delete *it;
+			it = _channels.erase(it);
+		}
+		else
+			++it;
+	}
 }
 
 //? CLIENT CYCLE
@@ -386,12 +437,14 @@ void Server::_removeClientFd(const int fd)
 
 void Server::_removeClientFromChannel(const int fd)
 {
-	// for (size_t i = 0; i < _channels.size(); ++i)
-	// {
-		// if (_channels[i]->hasClient(fd))						//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
-			// _channels[i]->removeClient(fd);					//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
-			// break;
-	// }
+	Client* client = _getClient(fd);
+	if (!client)
+		return;
+	for (size_t i = 0; i < _channels.size(); ++i)
+	{
+		if (_channels[i]->hasClient(client))
+			_channels[i]->removeClient(client);
+	}
 }
 
 void Server::_removeClientFromServer(const int fd)
@@ -431,16 +484,16 @@ void Server::_broadcastToAll(const std::string &msg, int exclude_fd)
 
 void Server::_broadcastToChannel(const std::string &channelName, const std::string &msg, int exclude_fd)
 {
-	// Channel *channel = _getChannel(channelName);					//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
-	// if (channel)
-	// {
-		// std::vector<Client *> members = channel->getMembers();	//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
-		// for (size_t i = 0; i < members.size(); ++i)
-		// {
-			// if (members[i]->getFd() != exclude_fd)
-				// _sendResponse(members[i]->getFd(), msg);
-		// }
-	// }
+	Channel *channel = _getChannel(channelName);					//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
+	if (channel)
+	{
+		std::vector<Client *> members = channel->getMembers();	//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
+		for (size_t i = 0; i < members.size(); ++i)
+		{
+			if (members[i]->getFd() != exclude_fd)
+				_sendResponse(members[i]->getFd(), msg);
+		}
+	}
 }
 
 //? HOSTNAME

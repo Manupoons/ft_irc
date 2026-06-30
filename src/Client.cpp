@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: rcarpio-cyepes <rcarpio-cyepes@student.    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:44 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/25 17:08:59 by rcarpio-         ###   ########.fr       */
+/*   Updated: 2026/06/30 04:33:07 by rcarpio-cye      ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,7 +58,7 @@ void Client::setIsLogged(bool val) { _isLogged = val; }
 
 //----Buffer----
 
-void Client::appendToBuffer(const std::string &data) { _buffer = data; }
+void Client::appendToBuffer(const std::string &data) { _buffer.append(data); }
 
 void Client::clearBuffer() { _buffer.clear(); }
 
