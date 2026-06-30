@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Server.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-cyepes <rcarpio-cyepes@student.    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 08:29:33 by rcarpio-cye      ###   ########.fr       */
+/*   Updated: 2026/06/30 11:26:21 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -467,8 +467,12 @@ void Server::_removeClientFromServer(const int fd)
 
 void Server::_sendWelcome(Client *client)
 {
-	std::string welcomeMsg = "Welcome to the IRC server, " + client->getNickname() + "!";
-	_sendResponse(client->getFd(), welcomeMsg);
+	std::string nick = client->getNickname();
+	std::string user = client->getUsername();
+	std::string host = client->getIpAddr();
+	std::string srv = _getHostname();
+
+	_sendResponse(client->getFd(), RPL_WELCOME(srv, nick, user, host, client->getRealname())); 
 }
 
 //? BROADCAST

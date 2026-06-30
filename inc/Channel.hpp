@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/25 16:53:37 by rcarpio-         ###   ########.fr       */
+/*   Updated: 2026/06/30 11:03:02 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -43,7 +43,7 @@ class Channel
 		bool isOperator(Client* client) const;
 		void addOperator(Client* client);
 		void removeOperator(Client* client);
-		bool checkJoinRules(const std::string& password) const;
+		bool checkJoinRules(Client* client, const std::string& password) const;
 		void setMode(char mode, bool add, const std::string& arg);
 		std::string getModeString() const;
 		void addInvitedUser(Client* client);

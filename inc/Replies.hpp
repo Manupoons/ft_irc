@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Replies.hpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-mamaratr <rcarpio-mamaratr@stud    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/05 09:23:40 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/28 17:00:36 by rcarpio-mam      ###   ########.fr       */
+/*   Updated: 2026/06/30 11:03:16 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,7 +24,7 @@ inline std::string _itos(int n)
 
 //── Welcome sequence ──
 
-#define RPL_WELCOME(srv, nick, user, host, real) \ 
+#define RPL_WELCOME(srv, nick, user, host, real) \
 	":" + srv + " 001 " + nick + " :Welcome to the irc network " + nick + "!" + user + "@" + host + "\r\n"
 
 #define RPL_YOURHOST(srv, nick) \

@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Channel.cpp                                        :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio- <rcarpio-@student.42.fr>          +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:42 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/25 16:58:25 by rcarpio-         ###   ########.fr       */
+/*   Updated: 2026/06/30 11:02:22 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -95,24 +95,14 @@ void Channel::removeOperator(Client* client)
 	}
 }
 
-bool Channel::checkJoinRules(const std::string& password) const
+bool Channel::checkJoinRules(Client* client, const std::string& password) const
 {
-	if (_inviteOnly)
-	{
-		// Check if the client is invited
-		if (std::find(_invitedUsers.begin(), _invitedUsers.end(), (Client*)NULL) == _invitedUsers.end())
-		{
-			return false;
-		}
-	}
+	if (_inviteOnly && !isInvited(client))
+		return false;
 	if (_passwordRequired && password != _password)
-	{
 		return false;
-	}
 	if (_maxUsers > 0 && _numberUsers >= _maxUsers)
-	{
 		return false;
-	}
 	return true;
 }
 
