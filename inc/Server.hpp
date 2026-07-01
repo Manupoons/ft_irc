@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/01 10:26:52 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 12:37:43 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -41,7 +41,7 @@ class Server
 		std::vector<struct pollfd>	_fds;
 		static bool 			_signal;
 
-		void _isValidPort(const std::string &port);
+		int  _parsePort(const std::string &port);
 		bool _isClientInAnyChannel(const int fd);
 		bool _clientIsReadyToLogin(const int fd);
 		bool _isValidNickname(const std::string &nickname);
@@ -65,7 +65,8 @@ class Server
 
 
 		//¬¬¬¬ Socket / Loop ¬¬¬¬
-		static void _signalHandler(const int signum);
+		static void _signalHandler(int signum);
+		void 		_cleanup();
 		void		_closeFds();
 		void		_serverLoop();
 		void		_setServerSocket();

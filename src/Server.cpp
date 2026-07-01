@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/01 11:51:22 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 12:42:14 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -28,20 +28,20 @@ static bool nickEquals(const std::string &a, const std::string &b)
 bool Server::_signal = false;
 
 const Server::commandHandler Server::_commandList[Server::_commandListSize] = {
-    {"CAP",     &Server::_handlerClientCap},
-    {"JOIN",    &Server::_handlerClientJoin},
-    {"QUIT",    &Server::_handlerClientQuit},
-    {"PART",    &Server::_handlerClientPart},
-    {"MODE",    &Server::_handlerClientMode},
-    {"KICK",    &Server::_handlerClientKick},
-    {"TOPIC",   &Server::_handlerClientTopic},
-    {"INVITE",  &Server::_handlerClientInvite},
-    {"PRIVMSG", &Server::_handlerClientPrivmsg},
-    {"NICK",    &Server::_handlerClientNickname},
-    {"USER",    &Server::_handlerClientUsername},
-    {"PASS",    &Server::_handlerClientPassword},
-    {"WHO",     &Server::_handlerClientWho},
-    {"PARROT",  &Server::_handlerClientParrot}
+	{"CAP",     &Server::_handlerClientCap},
+	{"JOIN",    &Server::_handlerClientJoin},
+	{"QUIT",    &Server::_handlerClientQuit},
+	{"PART",    &Server::_handlerClientPart},
+	{"MODE",    &Server::_handlerClientMode},
+	{"KICK",    &Server::_handlerClientKick},
+	{"TOPIC",   &Server::_handlerClientTopic},
+	{"INVITE",  &Server::_handlerClientInvite},
+	{"PRIVMSG", &Server::_handlerClientPrivmsg},
+	{"NICK",    &Server::_handlerClientNickname},
+	{"USER",    &Server::_handlerClientUsername},
+	{"PASS",    &Server::_handlerClientPassword},
+	{"WHO",     &Server::_handlerClientWho},
+	{"PARROT",  &Server::_handlerClientParrot}
 };
 
 Server::Server()
@@ -53,12 +53,15 @@ Server::Server()
 Server::~Server()
 {
 	std::cout << "Server destructor called" << std::endl;
+	_closeFds();
+	if(_serverSocket >= 0)
+		close(_serverSocket);
+	_cleanup();
 }
 
 void Server::init(const std::string &port, const std::string &password)
 {
-	_isValidPort(port);
-	_port = std::atoi(port.c_str());
+	_port = _parsePort(port);
 	_password = password;
 	_hostname = "localhost";
 	std::cout << "Server initialization" << std::endl;
@@ -68,22 +71,37 @@ void Server::init(const std::string &port, const std::string &password)
 	_serverLoop();
 }
 
+void Server::_cleanup()
+{
+	for (size_t i = 0; i < _channels.size(); ++i)
+		delete _channels[i];
+	_channels.clear();
+
+	for (size_t i = 0; i < _clients.size(); ++i)
+		delete _clients[i];
+	_clients.clear();
+	_fds.clear();
+}
 
 //? SOCKET / LOOP
 
-void Server::_signalHandler(const int signum)
+volatile sig_atomic_t _signal = 0;
+
+void Server::_signalHandler(int signum)
 {
 	if (signum == SIGINT)
-	{
-		std::cout << "\nSIGINT received, shutting down server..." << std::endl;
-		_signal = true;
-	}
+		_signal = 1;
 }
 
-void	Server::_closeFds()
+void Server::_closeFds()
 {
 	for (size_t i = 0; i < _fds.size(); ++i)
+	{
+		if (_fds[i].fd == _serverSocket)
+			continue;
 		close(_fds[i].fd);
+	}
+	_fds.clear();
 }
 
 void	Server::_serverLoop()
@@ -110,49 +128,48 @@ void	Server::_serverLoop()
 			}
 		}
 	}
-
 	std::cout << "Shutting down server..." << std::endl;
-	_closeFds();
 }
 
 void Server::_setServerSocket()
 {
-    _serverSocket = socket(AF_INET, SOCK_STREAM, 0);
-    if (_serverSocket == -1)
-    {
-        std::cerr << "Error creating socket" << std::endl;
-        exit(EXIT_FAILURE);
-    }
+	_serverSocket = socket(AF_INET, SOCK_STREAM, 0);
+	if (_serverSocket == -1)
+	{
+		std::cerr << "Error creating socket" << std::endl;
+		exit(EXIT_FAILURE);
+	}
 
-    int opt = 1;
-    if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
-        throw std::runtime_error("Error setting socket options");
-    
-    if (fcntl(_serverSocket, F_SETFL, O_NONBLOCK) == -1)
-        throw std::runtime_error("Error setting non-blocking mode");
+	int opt = 1;
+	if (setsockopt(_serverSocket, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt)) == -1)
+		throw std::runtime_error("Error setting socket options");
+	
+	if (fcntl(_serverSocket, F_SETFL, O_NONBLOCK) == -1)
+		throw std::runtime_error("Error setting non-blocking mode");
 
-    _confSocket.sin_family = AF_INET;
-    _confSocket.sin_addr.s_addr = INADDR_ANY;
-    _confSocket.sin_port = htons(_port);
+	_confSocket.sin_family = AF_INET;
+	_confSocket.sin_addr.s_addr = INADDR_ANY;
+	_confSocket.sin_port = htons(_port);
 
-    if (bind(_serverSocket, (struct sockaddr *)&_confSocket, sizeof(_confSocket)) == -1)
-        throw std::runtime_error("Error binding socket to port");
+	if (bind(_serverSocket, (struct sockaddr *)&_confSocket, sizeof(_confSocket)) == -1)
+		throw std::runtime_error("Error binding socket to port");
 
-    if (listen(_serverSocket, 10) == -1)
-        throw std::runtime_error("Error listening on socket");
+	if (listen(_serverSocket, 10) == -1)
+		throw std::runtime_error("Error listening on socket");
 
-    struct pollfd serverPollFd;
-    serverPollFd.fd = _serverSocket;
-    serverPollFd.events = POLLIN;
-    serverPollFd.revents = 0;
+	struct pollfd serverPollFd;
+	serverPollFd.fd = _serverSocket;
+	serverPollFd.events = POLLIN;
+	serverPollFd.revents = 0;
 
-    _fds.push_back(serverPollFd);
+	_fds.push_back(serverPollFd);
 }
 
 void Server::_addServerSignal()
 {
-	struct sigaction sa;
-	sa.sa_handler = _signalHandler;
+	struct sigaction sa = {};
+
+	sa.sa_handler = Server::_signalHandler;
 	sigemptyset(&sa.sa_mask);
 	sa.sa_flags = 0;
 
@@ -247,17 +264,23 @@ void Server::_sendResponse(const int fd, const std::string &response)
 
 //? VALIDATION
 
-void Server::_isValidPort(const std::string &port)
+int Server::_parsePort(const std::string &port)
 {
-	for (size_t i = 0; i < port.length(); ++i)
-	{
-		if (!isdigit(port[i]))
-			throw std::invalid_argument("Port must be a number");
-	}
+	if (port.empty())
+		throw std::invalid_argument("Port cannot be empty");
 
-	int portNum = std::atoi(port.c_str());
-	if (portNum < 1 || portNum > 65535)
-		throw std::out_of_range("Port number must be between 1 and 65535");
+	char *end = NULL;
+	errno = 0;
+
+	long value = std::strtol(port.c_str(), &end, 10);
+
+	if (*end != '\0')
+		throw std::invalid_argument("Port must be numeric");
+
+	if (errno == ERANGE || value < 1 || value > 65535)
+		throw std::out_of_range("Port must be between 1 and 65535");
+
+	return static_cast<int>(value);
 }
 
 bool Server::_isClientInAnyChannel(const int fd)
@@ -487,10 +510,10 @@ void Server::_broadcastToAll(const std::string &msg, int exclude_fd)
 
 void Server::_broadcastToChannel(const std::string &channelName, const std::string &msg, int exclude_fd)
 {
-	Channel *channel = _getChannel(channelName);					//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
+	Channel *channel = _getChannel(channelName);
 	if (channel)
 	{
-		std::vector<Client *> members = channel->getMembers();	//! DESCOMENTAR CUANDO ESTA LA CLASE CHANNEL
+		std::vector<Client *> members = channel->getMembers();
 		for (size_t i = 0; i < members.size(); ++i)
 		{
 			if (members[i]->getFd() != exclude_fd)
