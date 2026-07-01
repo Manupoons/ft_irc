@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:50:29 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 15:05:34 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 10:58:43 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -60,7 +60,7 @@ void Server::_handlerClientJoin(const std::string &buffer, const int fd)
 		if (channel)
 		{
 			if (channel->hasClient(client))
-				client;
+				continue;
 			if (channel->getInviteOnly() && !channel->isInvited(client))
 			{
 				_sendResponse(fd, ERR_INVITEONLYCHAN(_getHostname(), client->getNickname(), chName));
@@ -102,15 +102,20 @@ void Server::_handlerClientQuit(const std::string &buffer, const int fd)
 	Client *client = _getClient(fd);
 	if (!client)
 		return;
-	
+
 	std::string reason = buffer;
 	if (!reason.empty() && reason[0] == ':')
 		reason.erase(0, 1);
 	if (reason.empty())
 		reason = "Client quit";
 	std::string msg = client->getPrefix() + " QUIT :" + reason + "\r\n";
-	_broadcastToChannel("", msg, fd);
-	_clearClient(fd);
+
+	for (size_t i = 0; i < _channels.size(); ++i)
+	{
+		if (_channels[i]->hasClient(client))
+			_broadcastToChannel(_channels[i]->getName(), msg, fd);
+	}
+	_removeClientFromServer(fd);
 }
 
 void Server::_handlerClientPart(const std::string &buffer, const int fd)
@@ -178,10 +183,11 @@ void Server::_handlerClientMode(const std::string &buffer, const int fd)
 		_sendResponse(fd, ERR_NEEDMOREPARAMS(_getHostname(), client->getNickname(), "MODE"));
 		return;
 	}
-	
+
 	std::istringstream iss(buffer);
 	std::string target, modeStr;
 	iss >> target >> modeStr;
+
 	if (modeStr.empty())
 	{
 		Channel *channel = _getChannel(target);
@@ -196,129 +202,151 @@ void Server::_handlerClientMode(const std::string &buffer, const int fd)
 		_sendResponse(fd, RPL_CHANNELMODEIS(_getHostname(), client->getNickname(), target, modes));
 		return;
 	}
-	if (target[0] == '#')
-	{
-		Channel *channel = _getChannel(target);
-		if (!channel)
-		{
-			_sendResponse(fd, ERR_NOSUCHCHANNEL(_getHostname(), client->getNickname(), target));
-			return;
-		}
-		if (!channel->hasClient(client))
-		{
-			_sendResponse(fd, ERR_NOTONCHANNEL(_getHostname(), client->getNickname(), target));
-			return;
-		}
-		if (!channel->isOperator(client))
-		{
-			_sendResponse(fd, ERR_CHANOPRIVSNEEDED(_getHostname(), client->getNickname(), target));
-			return;
-		}
-		
-		bool adding = true;
-		std::string appliedModes;
-		std::string appliedParams;
-		std::vector<std::string> params;
-		std::string p;
-		while (iss >> p)
-			params.push_back(p);
-		size_t paramIdx = 0;
-		for (size_t i = 0; i < modeStr.size(); i++)
-		{
-			char c = modeStr[i];
-			if (c == '+')
-			{
-				adding = true;
-				continue;
-			}
-			if (c == '-')
-			{
-				adding = false;
-				continue;
-			}
-			switch (c)
-			{
-				case 'i':
-					channel->setInviteOnly(adding);
-					appliedModes += c;
-					break;
-				
-				case 't':
-					channel->setTopicRestricted(adding);
-					appliedModes += c;
-					break;
-				
-				case 'k':
-					if (adding)
-					{
-						if (paramIdx >= params.size())
-							break;
-						channel->setPassword(params[paramIdx++]);
-						appliedModes += c;
-						appliedParams += " " + channel->getPassword();
-					}
-					else
-					{
-						channel->setPassword("");
-						appliedModes += c;
-					}
-					break;
-				
-				case 'l':
-					if (adding)
-					{
-						if (paramIdx >= params.size())
-							break;
-						int lim = std::atoi(params[paramIdx++].c_str());
-						if (lim > 0)
-						{
-							channel->setMaxUsers(lim);
-							appliedModes += c;
-							appliedParams += " " + params[paramIdx - 1];
-						}
-					}
-					else
-					{
-						channel->setMaxUsers(0);
-						appliedModes += c;
-					}
-					break;
 
-				case 'o':
+	if (target.empty() || target[0] != '#')
+	{
+		_sendResponse(fd, ERR_UMODEUNKNOWNFLAG(_getHostname(), client->getNickname()));
+		return;
+	}
+
+	Channel *channel = _getChannel(target);
+	if (!channel)
+	{
+		_sendResponse(fd, ERR_NOSUCHCHANNEL(_getHostname(), client->getNickname(), target));
+		return;
+	}
+	if (!channel->hasClient(client))
+	{
+		_sendResponse(fd, ERR_NOTONCHANNEL(_getHostname(), client->getNickname(), target));
+		return;
+	}
+	if (!channel->isOperator(client))
+	{
+		_sendResponse(fd, ERR_CHANOPRIVSNEEDED(_getHostname(), client->getNickname(), target));
+		return;
+	}
+
+	std::vector<std::string> params;
+	std::string p;
+	while (iss >> p)
+		params.push_back(p);
+	size_t paramIdx = 0;
+
+	bool adding = true;
+	std::string modeMsg;
+	std::string appliedParams;
+	char lastSign = 0;
+
+	for (size_t i = 0; i < modeStr.size(); i++)
+	{
+		char c = modeStr[i];
+		if (c == '+')
+		{
+			adding = true;
+			continue;
+		}
+		if (c == '-')
+		{
+			adding = false;
+			continue;
+		}
+
+		bool applied = false;
+		std::string paramUsed;
+
+		switch (c)
+		{
+			case 'i':
+				channel->setInviteOnly(adding);
+				applied = true;
+				break;
+
+			case 't':
+				channel->setTopicRestricted(adding);
+				applied = true;
+				break;
+
+			case 'k':
+				if (adding)
 				{
 					if (paramIdx >= params.size())
 						break;
-					std::string opNick = params[paramIdx++];
-					Client *opTarget = _getClient(opNick);
-					if (!opTarget || !channel->hasClient(opTarget))
-					{
-						_sendResponse(fd, ERR_USERNOTINCHANNEL(_getHostname(), client->getNickname(), opNick, target));
+					channel->setPassword(params[paramIdx++]);
+					paramUsed = channel->getPassword();
+					applied = true;
+				}
+				else
+				{
+					channel->setPassword("");
+					applied = true;
+				}
+				break;
+
+			case 'l':
+				if (adding)
+				{
+					if (paramIdx >= params.size())
 						break;
+					int lim = std::atoi(params[paramIdx].c_str());
+					if (lim > 0)
+					{
+						channel->setMaxUsers(lim);
+						paramUsed = params[paramIdx];
+						applied = true;
 					}
-					if (adding)
-						channel->addOperator(opTarget);
-					else
-						channel->removeOperator(opTarget);
-					appliedModes += c;
-					appliedParams += " " + opNick;
+					paramIdx++;
+				}
+				else
+				{
+					channel->setMaxUsers(0);
+					applied = true;
+				}
+				break;
+
+			case 'o':
+			{
+				if (paramIdx >= params.size())
+					break;
+				std::string opNick = params[paramIdx++];
+				Client *opTarget = _getClient(opNick);
+				if (!opTarget || !channel->hasClient(opTarget))
+				{
+					_sendResponse(fd, ERR_USERNOTINCHANNEL(_getHostname(), client->getNickname(), opNick, target));
 					break;
 				}
-
-				default:
-					_sendResponse(fd, ERR_UNKNOWNMODE(_getHostname(), client->getNickname(), c, target));
-					break;
+				if (adding)
+					channel->addOperator(opTarget);
+				else
+					channel->removeOperator(opTarget);
+				paramUsed = opNick;
+				applied = true;
+				break;
 			}
+
+			default:
+				_sendResponse(fd, ERR_UNKNOWNMODE(_getHostname(), client->getNickname(), c, target));
+				break;
 		}
-		
-		if (!appliedModes.empty())
+
+		if (applied)
 		{
-			std::string sign = adding ? "+" : "-";
-			std::string modeMsg = client->getPrefix() + " MODE " + target + " " + sign + appliedModes + appliedParams + "\r\n";
-			_broadcastToChannel(target, modeMsg, -1);
+			char sign = adding ? '+' : '-';
+			if (sign != lastSign)
+			{
+				modeMsg += sign;
+				lastSign = sign;
+			}
+			modeMsg += c;
+			if (!paramUsed.empty())
+				appliedParams += " " + paramUsed;
 		}
 	}
-	else
-		_sendResponse(fd, ERR_UMODEUNKNOWNFLAG(_getHostname(), client->getNickname()));
+
+	if (!modeMsg.empty())
+	{
+		std::string fullMsg = client->getPrefix() + " MODE " + target + " " + modeMsg + appliedParams + "\r\n";
+		_broadcastToChannel(target, fullMsg, -1);
+	}
 }
 
 void Server::_handlerClientKick(const std::string &buffer, const int fd)
@@ -670,7 +698,7 @@ void Server::_handlerClientPassword(const std::string &buffer, const int fd)
 	if (pass != this->_password)
 	{
 		_sendResponse(fd, ERR_PASSWDMISMATCH(_getHostname()));
-		_clearClient(fd);
+		_removeClientFromServer(fd);
 		return;
 	}
 	client->setIsAuthenticated(true);
@@ -736,5 +764,7 @@ void Server::_handlerClientWho(const std::string &buffer, const int fd)
 void Server::_handlerClientParrot(const std::string &buffer, const int fd)
 {
 	Client *client = _getClient(fd);
+	if (!client)
+		return;
 	_sendResponse(fd, RPL_PARROT(_getHostname(), client->getNickname()));
 }

@@ -6,14 +6,24 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 15:01:45 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 11:51:22 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "../inc/Server.hpp"
-#include <algorithm>
-#include <cerrno>
 
+static bool nickEquals(const std::string &a, const std::string &b)
+{
+	if (a.size() != b.size())
+		return false;
+	for (size_t i = 0; i < a.size(); ++i)
+	{
+		if (std::toupper(static_cast<unsigned char>(a[i])) !=
+			std::toupper(static_cast<unsigned char>(b[i])))
+			return false;
+	}
+	return true;
+}
 
 bool Server::_signal = false;
 
@@ -34,7 +44,6 @@ const Server::commandHandler Server::_commandList[Server::_commandListSize] = {
     {"PARROT",  &Server::_handlerClientParrot}
 };
 
-
 Server::Server()
 {
 	std::cout << "Server constructor called" << std::endl;
@@ -48,14 +57,15 @@ Server::~Server()
 
 void Server::init(const std::string &port, const std::string &password)
 {
-    _port = std::atoi(port.c_str());
-    _password = password;
-    _hostname = "localhost";
-    std::cout << "Server initialization" << std::endl;
+	_isValidPort(port);
+	_port = std::atoi(port.c_str());
+	_password = password;
+	_hostname = "localhost";
+	std::cout << "Server initialization" << std::endl;
 
-    _setServerSocket();
-    _addServerSignal();
-    _serverLoop();
+	_setServerSocket();
+	_addServerSignal();
+	_serverLoop();
 }
 
 
@@ -181,23 +191,6 @@ void Server::_acceptNewClient()
 	std::cout << "New client connected: " << inet_ntoa(clientAddr.sin_addr) << ":" << ntohs(clientAddr.sin_port) << std::endl;
 }
 
-void Server:: _clearClient(const int fd)
-{
-	std::vector<struct pollfd>::iterator it = _fds.begin();
-	while (it != _fds.end())
-	{
-		if (it->fd == fd)
-		{
-			it = _fds.erase(it);
-			break;
-		}
-		else
-			++it;
-	}
-	close(fd);
-	std::cout << "Client with fd " << fd << " disconnected and cleaned up." << std::endl;
-}
-
 void Server::_receiveNewData(const int fd)
 {
 	Client *client = _getClient(fd);
@@ -225,12 +218,15 @@ void Server::_receiveNewData(const int fd)
 			
 			if (!cmdLine.empty())
 				_executeCommand(cmdLine, fd);
+			if (!_getClient(fd))
+				return;
+			clientBuffer = client->getBuffer();
 		}
 	}
 	else if (bytesRead == 0)
 	{
 		std::cout << "Client with fd " << fd << " has closed the connection." << std::endl;
-		_clearClient(fd);
+		_removeClientFromServer(fd);
 	}
 	else
 	{
@@ -301,7 +297,7 @@ bool Server::_isNicknameInUse(const int fd, const std::string &nickname)
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		if (_clients[i]->getNickname() == nickname && _clients[i]->getFd() != fd)
+		if (nickEquals(_clients[i]->getNickname(), nickname) && _clients[i]->getFd() != fd)
 			return true;
 	}
 	return false;
@@ -383,7 +379,7 @@ Client* Server::_getClient(const std::string nickname)
 {
 	for (size_t i = 0; i < _clients.size(); ++i)
 	{
-		if (_clients[i]->getNickname() == nickname)
+		if (nickEquals(_clients[i]->getNickname(), nickname))
 			return _clients[i];
 	}
 	return NULL;
@@ -450,8 +446,11 @@ void Server::_removeClientFromChannel(const int fd)
 
 void Server::_removeClientFromServer(const int fd)
 {
-	_removeClientFd(fd);
 	_removeClientFromChannel(fd);
+	_removeEmptyChannels();
+	_removeClientFd(fd);
+	close(fd);
+
 	std::vector<Client *>::iterator it = _clients.begin();
 	while (it != _clients.end())
 	{
@@ -461,8 +460,7 @@ void Server::_removeClientFromServer(const int fd)
 			it = _clients.erase(it);
 			break;
 		}
-		else
-			++it;
+		++it;
 	}
 }
 

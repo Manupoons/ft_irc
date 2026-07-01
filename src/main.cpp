@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:55:38 by rcarpio-          #+#    #+#             */
-/*   Updated: 2026/06/30 15:03:45 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 11:50:23 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -15,7 +15,11 @@
 
 int main(int argc, char **argv)
 {
-	(void) argc;
+	if (argc != 3)
+	{
+		std::cerr << "Usage: " << argv[0] << " <port> <password>" << std::endl;
+		return 1;
+	}
 	try
 	{
 		Server server;
@@ -25,7 +29,8 @@ int main(int argc, char **argv)
 	{
 		std::cerr << "Error initializing server: " << e.what() << std::endl;
 		return 1;
-	}	
+	}
+	return 0;
 }
 
 static bool isValidPort(const std::string &port)

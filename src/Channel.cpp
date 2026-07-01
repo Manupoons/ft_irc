@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:42 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 11:02:22 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 11:54:12 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -58,18 +58,6 @@ bool Channel::hasClient(Client* client) const
 	return std::find(_members.begin(), _members.end(), client) != _members.end();
 }
 
-void Channel::broadcast(const std::string& message, Client* sender) const
-{
-	for (std::vector<Client*>::const_iterator it = _members.begin(); it != _members.end(); ++it)
-	{
-		if (*it != sender)
-		{
-			(*it)->sendMessage(message);
-			std::cout << "Broadcasting message to " << (*it)->getNickname() << ": " << message << std::endl;
-		}
-	}
-}
-
 bool Channel::isOperator(Client* client) const
 {
 	return std::find(_operators.begin(), _operators.end(), client) != _operators.end();
@@ -95,43 +83,6 @@ void Channel::removeOperator(Client* client)
 	}
 }
 
-bool Channel::checkJoinRules(Client* client, const std::string& password) const
-{
-	if (_inviteOnly && !isInvited(client))
-		return false;
-	if (_passwordRequired && password != _password)
-		return false;
-	if (_maxUsers > 0 && _numberUsers >= _maxUsers)
-		return false;
-	return true;
-}
-
-void Channel::setMode(char mode, bool add, const std::string& arg)
-{
-	// Implement mode setting logic based on the mode character
-	switch (mode)
-	{
-	case 'i':
-		_inviteOnly = add;
-		break;
-	case 't':
-		_topicRestricted = add;
-		break;
-	case 'k':
-		if (add)
-			_password = arg;
-		else
-			_password.clear();
-		_passwordRequired = !arg.empty();
-		break;
-	case 'l':
-		_maxUsers = add ? std::atoi(arg.c_str()) : 0;
-		break;
-	default:
-		break;
-	}
-}
-
 std::string Channel::getModeString() const
 {
 	std::string modes = "+";
@@ -141,7 +92,7 @@ std::string Channel::getModeString() const
 		modes += "t";
 	if (!_password.empty())
 		modes += "k";
-	if (_numberUsers > 0)
+	if (_maxUsers > 0)
 		modes += "l";
 	if (modes == "+")
 		return "";

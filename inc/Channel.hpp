@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 11:21:04 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 11:03:02 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 11:55:11 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -39,12 +39,9 @@ class Channel
 		void addClient(Client* client);
 		void removeClient(Client* client);
 		bool hasClient(Client* client) const;
-		void broadcast(const std::string& message, Client* sender) const;
 		bool isOperator(Client* client) const;
 		void addOperator(Client* client);
 		void removeOperator(Client* client);
-		bool checkJoinRules(Client* client, const std::string& password) const;
-		void setMode(char mode, bool add, const std::string& arg);
 		std::string getModeString() const;
 		void addInvitedUser(Client* client);
 		bool isInvited(Client* client) const;

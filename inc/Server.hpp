@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 15:02:35 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/01 10:26:52 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -71,7 +71,6 @@ class Server
 		void		_setServerSocket();
 		void		_addServerSignal();
 		void		_acceptNewClient();
-		void		_clearClient(const int fd);
 		void		_receiveNewData(const int fd);
 		void		_sendResponse(const int fd, const std::string &response);
 

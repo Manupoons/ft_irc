@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   Client.cpp                                         :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: rcarpio-cyepes <rcarpio-cyepes@student.    +#+  +:+       +#+        */
+/*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:44 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/06/30 04:33:07 by rcarpio-cye      ###   ########.fr       */
+/*   Updated: 2026/07/01 11:54:56 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -70,13 +70,7 @@ std::string Client::getPrefix() const
 	return ":" + nick + "!" + user + "@" + host;
 }
 
-void Client::sendMessage(const std::string &message)
-{
-	if (send(_fd, message.c_str(), message.size(), 0) == -1)
-		std::cerr << "Error sending message to " << _nickname << std::endl;
-}
-
 bool Client::getIsLogged() const
 {
-    return _isLogged; 
+	return _isLogged; 
 }
