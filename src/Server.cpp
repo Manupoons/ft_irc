@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/31 09:13:09 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/31 09:29:25 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -47,7 +47,6 @@ const Server::commandHandler Server::_commandList[Server::_commandListSize] = {
 Server::Server()
 {
 	std::cout << "Server constructor called" << std::endl;
-	
 }
 
 Server::~Server()

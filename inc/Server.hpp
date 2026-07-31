@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/31 08:44:10 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/31 09:33:52 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -32,7 +32,7 @@ class Server
 
 		int						_port;
 		std::string				_password;
-		int 					_serverSocket; 
+		int						_serverSocket; 
 		std::string				_hostname;
 		std::vector<Client *>	_clients;
 		std::vector<Channel *>	_channels;
