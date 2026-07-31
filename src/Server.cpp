@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/01 12:42:14 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/30 18:32:27 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -25,7 +25,7 @@ static bool nickEquals(const std::string &a, const std::string &b)
 	return true;
 }
 
-bool Server::_signal = false;
+volatile sig_atomic_t Server::_signal = 0;
 
 const Server::commandHandler Server::_commandList[Server::_commandListSize] = {
 	{"CAP",     &Server::_handlerClientCap},
@@ -84,8 +84,6 @@ void Server::_cleanup()
 }
 
 //? SOCKET / LOOP
-
-volatile sig_atomic_t _signal = 0;
 
 void Server::_signalHandler(int signum)
 {
@@ -175,6 +173,8 @@ void Server::_addServerSignal()
 
 	if (sigaction(SIGINT, &sa, NULL) == -1)
 		throw std::runtime_error("Error setting signal handler");
+
+	signal(SIGPIPE, SIG_IGN);
 }
 
 void Server::_acceptNewClient()

@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/06/11 10:50:29 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/01 10:58:43 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/30 14:03:43 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -621,7 +621,7 @@ void Server::_handlerClientNickname(const std::string &buffer, const int fd)
 	{
 		std::string oldPrefix = client->getPrefix();
 		client->setNickname(nick);
-		_broadcastToAll(oldPrefix + "NICK :" + nick + "\r\n", -1);
+		_broadcastToAll(oldPrefix + " NICK :" + nick + "\r\n", -1);
 		return;
 	}
 
@@ -763,6 +763,7 @@ void Server::_handlerClientWho(const std::string &buffer, const int fd)
 
 void Server::_handlerClientParrot(const std::string &buffer, const int fd)
 {
+	(void)buffer;
 	Client *client = _getClient(fd);
 	if (!client)
 		return;

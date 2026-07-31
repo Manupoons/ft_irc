@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/25 12:55:38 by rcarpio-          #+#    #+#             */
-/*   Updated: 2026/07/01 11:50:23 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/30 14:02:16 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -31,15 +31,4 @@ int main(int argc, char **argv)
 		return 1;
 	}
 	return 0;
-}
-
-static bool isValidPort(const std::string &port)
-{
-	for (size_t i = 0; i < port.length(); ++i)
-	{
-		if (!isdigit(port[i]))
-			return false;
-	}
-	int portNum = std::atoi(port.c_str());
-	return (portNum >= 1024 && portNum <= 65535);
 }

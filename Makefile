@@ -9,7 +9,7 @@ SRC =	src/Channel.cpp \
 OBJ_DIR = obj
 OBJ = $(SRC:%.cpp=$(OBJ_DIR)/%.o)
 CC = c++
-CFLAGS = -std=c++98
+CFLAGS = -Wall -Werror -Wextra -std=c++98
 
 COLOR_COMPILATION = \033[38;2;0;200;100m
 COLOR_CLEAN = \033[38;2;200;100;100m
