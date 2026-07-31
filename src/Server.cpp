@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:31:47 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/30 18:32:27 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/31 09:13:09 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -307,7 +307,10 @@ bool Server::_isValidNickname(const std::string &nickname)
 	if (nickname.empty() || nickname.length() > 9)
 		return false;
 
-	for (size_t i = 0; i < nickname.length(); ++i)
+	if (!isalpha(static_cast<unsigned char>(nickname[0])))
+		return false;
+
+	for (size_t i = 1; i < nickname.length(); ++i)
 	{
 		if (!isalnum(nickname[i]) && nickname[i] != '-' && nickname[i] != '_')
 			return false;

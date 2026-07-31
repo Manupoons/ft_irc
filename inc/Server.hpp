@@ -6,7 +6,7 @@
 /*   By: mamaratr <mamaratr@student.42madrid.com    +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2026/05/27 10:42:46 by mamaratr          #+#    #+#             */
-/*   Updated: 2026/07/30 18:31:01 by mamaratr         ###   ########.fr       */
+/*   Updated: 2026/07/31 08:44:10 by mamaratr         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -37,7 +37,6 @@ class Server
 		std::vector<Client *>	_clients;
 		std::vector<Channel *>	_channels;
 		struct sockaddr_in		_confSocket;
-		int						_replyCode;
 		std::vector<struct pollfd>	_fds;
 		static volatile sig_atomic_t	_signal;
 
